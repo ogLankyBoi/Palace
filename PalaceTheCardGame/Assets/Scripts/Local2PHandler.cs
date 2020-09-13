@@ -230,29 +230,59 @@ public class Local2PHandler : MonoBehaviour
         }
 
         List<string> sortedCards = new List<string>();
-        for (int j = 0; j < 6; j++)
+        bool x = true;
+        while (cardValues.Count > 0)
         {
             for (int i = 6; i < 18; i = i + 2)
             {
-                if (cardValues[j] == deck[i][0])
+                if (cardValues[0] == deck[i][0])
                 {
-                    if (j == 0)
+                    if (sortedCards.Count == 0)
                     {
                         sortedCards.Add(deck[i]);
+                        cardValues.RemoveAt(0);
                         break;
                     }
                     else
                     {
-                        for (int m = 0; m < sortedCards.Count - 1; m++)
+                        foreach (var m in sortedCards)
                         {
-                            if (sortedCards[m][0] == cardValues[j])
-                            {
+                            
+                                if (m == deck[i])
+                                {
+                                    x = false;
+                                    break;
+                                }
 
-                            }
+                        }
+                        if (x == true)
+                        {
+                            sortedCards.Add(deck[i]);
+                            cardValues.RemoveAt(0);
+                            x = true;
+                            break;
+                        }
+                        else
+                        {
+                            x = true;
                         }
                     }
+                    
                 }
             }
+        }
+        for (int t = 0; t < 6; t++)
+        {
+            Debug.Log(sortedCards[t]);
+        }
+
+        for(int z = 0; z < 6; z++)
+        {
+            GameObject.Find(sortedCards[z]).transform.SetParent(canvas.transform, true);
+        }
+        for (int y = 0; y < 6; y++)
+        {
+            GameObject.Find(sortedCards[y]).transform.SetParent(playerArea.transform, true);
         }
     }
 

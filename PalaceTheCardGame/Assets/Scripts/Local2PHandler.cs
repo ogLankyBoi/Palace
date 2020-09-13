@@ -167,8 +167,93 @@ public class Local2PHandler : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
 
-
+        SortPlayerCards();
         PickEndOfGameCards();
+    }
+
+    void SortPlayerCards()
+    {
+        int n = 0;
+        List<int> playerCards = new List<int>();
+        for (int i = 6; i < 18; i = i + 2)
+        {
+            playerCards.Add(cardValue[i]);
+            n++;
+        }
+        playerCards.Sort((a, b) => a.CompareTo(b));
+
+        List<char> cardValues = new List<char>();
+        for (int i = 0; i < 6; i++)
+        {
+            switch (playerCards[i])
+            {
+                case 2:
+                    cardValues.Add('2');
+                    break;
+                case 3:
+                    cardValues.Add('3');
+                    break;
+                case 4:
+                    cardValues.Add('4');
+                    break;
+                case 5:
+                    cardValues.Add('5');
+                    break;
+                case 6:
+                    cardValues.Add('6');
+                    break;
+                case 7:
+                    cardValues.Add('7');
+                    break;
+                case 8:
+                    cardValues.Add('8');
+                    break;
+                case 9:
+                    cardValues.Add('9');
+                    break;
+                case 10:
+                    cardValues.Add('T');
+                    break;
+                case 11:
+                    cardValues.Add('J');
+                    break;
+                case 12:
+                    cardValues.Add('Q');
+                    break;
+                case 13:
+                    cardValues.Add('K');
+                    break;
+                default:
+                    cardValues.Add('A');
+                    break;
+            }
+        }
+
+        List<string> sortedCards = new List<string>();
+        for (int j = 0; j < 6; j++)
+        {
+            for (int i = 6; i < 18; i = i + 2)
+            {
+                if (cardValues[j] == deck[i][0])
+                {
+                    if (j == 0)
+                    {
+                        sortedCards.Add(deck[i]);
+                        break;
+                    }
+                    else
+                    {
+                        for (int m = 0; m < sortedCards.Count - 1; m++)
+                        {
+                            if (sortedCards[m][0] == cardValues[j])
+                            {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void PickEndOfGameCards()

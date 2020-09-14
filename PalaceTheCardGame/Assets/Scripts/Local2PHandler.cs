@@ -129,7 +129,7 @@ public class Local2PHandler : MonoBehaviour
         {
             GameObject newCard = Instantiate(cardPrefab, new Vector3(880, 540, zOffset), Quaternion.identity);
             newCard.name = deck[i];
-            GameObject.Find(deck[i]).transform.SetParent(canvas.transform, true);
+            //GameObject.Find(deck[i]).transform.SetParent(canvas.transform, true);
 
 
             zOffset = zOffset - 1;
@@ -157,11 +157,11 @@ public class Local2PHandler : MonoBehaviour
 
             if (i % 2 == 0)
             {
-                GameObject.Find(deck[i]).transform.SetParent(playerArea.transform, false);
+                GameObject.Find(deck[i]).transform.SetParent(playerArea.transform, true);
             }
             else
             {
-                GameObject.Find(deck[i]).transform.SetParent(computerArea.transform, false);
+                GameObject.Find(deck[i]).transform.SetParent(computerArea.transform, true);
             }
 
             yield return new WaitForSeconds(0.2f);

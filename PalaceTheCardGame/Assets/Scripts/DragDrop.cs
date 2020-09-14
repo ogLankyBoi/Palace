@@ -3,54 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DragDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class DragDrop : MonoBehaviour
 {
     public bool isDraggable;
-    public static GameObject DraggedInstance;
+    private bool isDragging;
 
-    Vector3 _startPosition;
-    Vector3 _offsetToMouse;
-    float _zDistanceToCamera;
+    public GameObject lastCard;
 
-    #region Interface Implementations
+    private float startPosX;
+    private float startPosY;
 
-    public void OnBeginDrag(PointerEventData eventData)
+    void Update()
     {
-        if (isDraggable)
+        if (isDragging && isDraggable)
         {
-            DraggedInstance = gameObject;
-            _startPosition = transform.position;
-            _zDistanceToCamera = Mathf.Abs(_startPosition.z - Camera.main.transform.position.z);
+            Vector3 mousePos;
+            mousePos = Input.mousePosition;
+            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
 
-            _offsetToMouse = _startPosition - Camera.main.ScreenToWorldPoint(
-                new Vector3(Input.mousePosition.x, Input.mousePosition.y, _zDistanceToCamera)
-            );
-        }
-
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        if (isDraggable)
-        {
-            if (Input.touchCount > 1)
-                return;
-
-            transform.position = Camera.main.ScreenToWorldPoint(
-                new Vector3(Input.mousePosition.x, Input.mousePosition.y, _zDistanceToCamera)
-                ) + _offsetToMouse;
-        }
-
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        if (isDraggable)
-        {
-            DraggedInstance = null;
-            _offsetToMouse = Vector3.zero;
+            this.gameObject.transform.localPosition = new Vector3(mousePos.x - startPosX, mousePos.y - startPosY, this.gameObject.transform.localPosition.z);
         }
     }
 
-    #endregion
+    private void OnMouseDown()
+    {
+        if (Input.GetMouseButtonDown(0) && isDraggable)
+        {
+            Vector3 mousePos;
+            mousePos = Input.mousePosition;
+            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+
+            startPosX = mousePos.x - this.transform.localPosition.x;
+            startPosY = mousePos.y - this.transform.localPosition.y;
+
+            isDragging = true;
+        }
+    }
+
+    private void OnMouseUp()
+    {
+        isDragging = false;
+    }
 }

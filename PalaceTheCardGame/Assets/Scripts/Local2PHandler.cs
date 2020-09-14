@@ -123,7 +123,7 @@ public class Local2PHandler : MonoBehaviour
     {
         float xOffset1 = 0;
         float xOffset2 = 0;
-        float zOffset = 0;
+        float zOffset = 52;
 
         for (int i = 0; i < 52; i++)
         {
@@ -132,7 +132,7 @@ public class Local2PHandler : MonoBehaviour
             GameObject.Find(deck[i]).transform.SetParent(canvas.transform, true);
 
 
-            zOffset = zOffset + 1;
+            zOffset = zOffset - 1;
         }
         yield return new WaitForSeconds(1f);
 
@@ -140,13 +140,13 @@ public class Local2PHandler : MonoBehaviour
         {
             if (i % 2 == 0)
             {
-                GameObject.Find(deck[i]).transform.position = new Vector3(810 + xOffset1, 330, 0);
+                GameObject.Find(deck[i]).transform.position = new Vector3(810 + xOffset1, 330, 30);
 
                 xOffset1 = xOffset1 + 150;
             }
             else
             {
-                GameObject.Find(deck[i]).transform.position = new Vector3(1110 - xOffset2, 750, 0);
+                GameObject.Find(deck[i]).transform.position = new Vector3(1110 - xOffset2, 750, 30);
 
                 xOffset2 = xOffset2 + 150;
             }
@@ -157,11 +157,11 @@ public class Local2PHandler : MonoBehaviour
 
             if (i % 2 == 0)
             {
-                GameObject.Find(deck[i]).transform.SetParent(playerArea.transform, true);
+                GameObject.Find(deck[i]).transform.SetParent(playerArea.transform, false);
             }
             else
             {
-                GameObject.Find(deck[i]).transform.SetParent(computerArea.transform, true);
+                GameObject.Find(deck[i]).transform.SetParent(computerArea.transform, false);
             }
 
             yield return new WaitForSeconds(0.2f);
@@ -288,7 +288,7 @@ public class Local2PHandler : MonoBehaviour
 
     void PickEndOfGameCards()
     {
-        for (int i = 6; i < 18; i++)
+        for (int i = 6; i < 18; i = i + 2)
         {
             GameObject.Find(deck[i]).GetComponent<UpdateCardSprite>().faceUp = true;
             GameObject.Find(deck[i]).GetComponent<DragDrop>().isDraggable = true;

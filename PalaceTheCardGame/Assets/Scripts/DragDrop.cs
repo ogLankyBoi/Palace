@@ -3,17 +3,58 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DragDrop : MonoBehaviour
+public class DragDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public bool isDraggable;
     private bool isDragging;
 
-    public GameObject lastCard;
+    public GameObject canvas;
+    public GameObject playerArea;
 
-    private float startPosX;
-    private float startPosY;
+    public Local2PHandler local2PHandler;
 
-    void Update()
+    void Start()
+    {
+        local2PHandler = FindObjectOfType<Local2PHandler>();
+
+        canvas = local2PHandler.canvas;
+        playerArea = local2PHandler.playerArea;
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (isDraggable)
+        {
+            this.transform.SetParent(canvas.transform, true);
+            isDragging = true;
+
+            GetComponent<CanvasGroup>().blocksRaycasts = false;
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (isDragging && isDraggable)
+        {
+            this.transform.position = eventData.position;
+        }
+        
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (isDraggable)
+        {
+            if (this.transform.parent.name != "PDZ")
+            {
+                this.transform.SetParent(playerArea.transform, true);
+            }
+            isDragging = false;
+            GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+        
+    }
+    /*void Update()
     {
         if (isDragging && isDraggable)
         {
@@ -43,5 +84,5 @@ public class DragDrop : MonoBehaviour
     private void OnMouseUp()
     {
         isDragging = false;
-    }
+    }*/
 }

@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 6434588618282218883}
   - component: {fileID: 4411480993017849342}
   - component: {fileID: -6343157651393952879}
+  - component: {fileID: -5560900594392545533}
+  - component: {fileID: 627602921687877378}
   m_Layer: 5
   m_Name: cardPrefab
   m_TagString: Card
@@ -143,8 +145,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a079752df8c0944eb95b82ddad3d4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
   isDraggable: 0
+  lastCard1: {fileID: 0}
+  lastCard2: {fileID: 0}
+  lastCard3: {fileID: 0}
+  canvas: {fileID: 0}
+  playerArea: {fileID: 0}
+  local2PHandler: {fileID: 0}
 --- !u!114 &6434588618282218883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,3 +206,39 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 6.91, y: 10.56}
   m_EdgeRadius: 0
+--- !u!114 &-5560900594392545533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291514214387894292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 2
+  m_StartAxis: 1
+  m_CellSize: {x: 6.6, y: 10}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 2
+  m_ConstraintCount: 1
+--- !u!225 &627602921687877378
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291514214387894292}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

@@ -393,6 +393,7 @@ public class Local2PHandler : MonoBehaviour
                     }
 
                 }
+                StartCoroutine(ComputerTurn());
             }
             else if (playerRound == 2)
             {
@@ -692,12 +693,165 @@ public class Local2PHandler : MonoBehaviour
             playedCards.Add(deck[topDeckCard]);
             topDeckCard++;
         }
+        else if (computerRound == 1)
+        {
+            bool pos = CanComputerPlayHand();
+            if (pos == true)
+            {
+                string bestCard = BestComputerCard();
+            }
+            else if (pos == false)
+            {
+                FlipTopCard(2);
+            }
+        }
         playerTurn = true;
         for (int i = 0; i < playerDZ.transform.childCount; i++)
         {
             playerDZ.transform.GetChild(i).GetComponent<DragDrop>().isDraggable = true;
         }
 
+    }
+
+    public string BestComputerCard()
+    {
+        string bestCard = "";
+
+
+
+        return bestCard;
+    }
+
+    public bool CanComputerPlayHand()
+    {
+        bool possible = false;
+
+        for (int i = 0; i < computerArea.transform.childCount; i++)
+        {
+            char cardV = computerArea.transform.GetChild(i).name[0];
+            switch (lastPlayedCard)
+            {
+                case '4':
+                    if (cardV == '2' || cardV == '4' || cardV == '5' || cardV == '6' || cardV == '7' || cardV == '8' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case '6':
+                    if (cardV == '2' || cardV == '5' || cardV == '6' || cardV == '7' || cardV == '8' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case '7':
+                    if (cardV == '2' || cardV == '5' || cardV == '7' || cardV == '8' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case '8':
+                    if (cardV == '2' || cardV == '5' || cardV == '8' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case '9':
+                    if (cardV == '2' || cardV == '5' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case 'J':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case 'Q':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case 'K':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == 'K' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case 'A':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == 'A')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                case '5':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == '4' || cardV == '3')
+                    {
+                        possible = true;
+                        break;
+                    }
+                    else
+                    {
+                        possible = false;
+                    }
+                    break;
+                default:
+                    possible = true;
+                    break;
+            }
+            if (possible == true)
+            {
+                break;
+            }
+        }
+
+        return possible;
     }
 
     public void FindBestLastCards()

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Globalization;
+using Random = System.Random;
 
 public class Local2PHandler : MonoBehaviour
 {
@@ -147,7 +148,7 @@ public class Local2PHandler : MonoBehaviour
 
         for (int i = 0; i < 52; i++)
         {
-            GameObject newCard = Instantiate(cardPrefab, new Vector3(880, 540, zOffset), Quaternion.identity);
+            GameObject newCard = Instantiate(cardPrefab, new Vector3(200, 540, zOffset), Quaternion.identity);
             newCard.name = deck[i];
 
 
@@ -159,15 +160,15 @@ public class Local2PHandler : MonoBehaviour
         {
             if (i % 2 == 0)
             {
-                GameObject.Find(deck[i]).transform.position = new Vector3(810 + xOffset1, 330, 30);
+                GameObject.Find(deck[i]).transform.position = new Vector3(760 + xOffset1, 380, 30);
                 playerLastUpCards.Add(deck[i]);
-                xOffset1 = xOffset1 + 150;
+                xOffset1 = xOffset1 + 200;
             }
             else
             {
-                GameObject.Find(deck[i]).transform.position = new Vector3(1110 - xOffset2, 750, 30);
+                GameObject.Find(deck[i]).transform.position = new Vector3(1160 - xOffset2, 700, 30);
                 computerLastUpCards.Add(deck[i]);
-                xOffset2 = xOffset2 + 150;
+                xOffset2 = xOffset2 + 200;
             }
             yield return new WaitForSeconds(0.2f);
         }
@@ -337,9 +338,9 @@ public class Local2PHandler : MonoBehaviour
                         tempCardName = playerDZ.transform.GetChild(0).name;
                         GameObject.Find(tempCardName).transform.SetParent(canvas.transform, false);
                         playerFinalCards.Add(tempCardName);
-                        GameObject.Find(tempCardName).transform.position = new Vector3(810 + xOffset, 330, 30);
+                        GameObject.Find(tempCardName).transform.position = new Vector3(760 + xOffset, 380, 30);
                         GameObject.Find(tempCardName).GetComponent<DragDrop>().isDraggable = false;
-                        xOffset += 150;
+                        xOffset += 200;
                     }
                     StartCoroutine(ComputerTurn());
                     playerRound++;
@@ -349,7 +350,22 @@ public class Local2PHandler : MonoBehaviour
             {
                 if (playerDZ.transform.childCount == 0)
                 {
-                    FlipTopCard(1);
+                    if (topDeckCard <= 51)
+                    {
+                        FlipTopCard(1);
+                        
+                    }
+                    else
+                    {
+                        lastPlayedCard = 'N';
+                        while (playedCards.Count != 0)
+                        {
+                            GameObject.Find(playedCards[0]).transform.SetParent(playerArea.transform, false);
+                            GameObject.Find(playedCards[0]).GetComponent<DragDrop>().isDraggable = true;
+                            playedCards.RemoveAt(0);
+                        }
+                        StartCoroutine(ComputerTurn());
+                    }
                 }
                 else
                 {
@@ -359,10 +375,178 @@ public class Local2PHandler : MonoBehaviour
                     {
                         string tempName = playerDZ.transform.GetChild(0).name;
                         GameObject.Find(tempName).transform.SetParent(canvas.transform, true);
-                        GameObject.Find(tempName).transform.position = new Vector3(1040, 540, 0);
+                        GameObject.Find(tempName).transform.position = new Vector3(420, 540, 0);
                         GameObject.Find(tempName).GetComponent<UpdateCardSprite>().faceUp = true;
+                        GameObject.Find(tempName).GetComponent<DragDrop>().isDraggable = false;
                         playedCards.Add(tempName);
                     }
+                    bool check = CheckCard(cardV);
+                    if (cardV == 'T')
+                    {
+                        StartCoroutine(WaitOneSec());
+                        lastPlayedCard = 'N';
+                        while (playedCards.Count != 0)
+                        {
+                            string tempN = playedCards[0];
+                            Destroy(GameObject.Find(tempN));
+                            playedCards.RemoveAt(0);
+                        }
+                        if (playerArea.transform.childCount == 0 && playerLastUpCards.Count == 0)
+                        {
+                            PlayerWins();
+                        }
+                        else if (playerArea.transform.childCount == 0 && playerFinalCards.Count == 0)
+                        {
+                            if (playerLastUpCards.Count != 0)
+                            {
+                                for (int i = 0; i < playerLastUpCards.Count; i++)
+                                {
+                                    GameObject.Find(playerLastUpCards[i]).transform.SetParent(canvas.transform, true);
+                                    GameObject.Find(playerLastUpCards[i]).GetComponent<DragDrop>().isDraggable = true;
+                                }
+                            }
+
+                            playerRound = 2;
+                        }
+                        else if (playerArea.transform.childCount == 0 && topDeckCard == 52)
+                        {
+                            while (playerFinalCards.Count != 0)
+                            {
+                                GameObject.Find(playerFinalCards[0]).transform.SetParent(playerArea.transform, true);
+                                GameObject.Find(playerFinalCards[0]).GetComponent<UpdateCardSprite>().faceUp = true;
+                                GameObject.Find(playerFinalCards[0]).GetComponent<DragDrop>().isDraggable = true;
+                                playerFinalCards.RemoveAt(0);
+                            }
+                        }
+                        else if (playerArea.transform.childCount < 3)
+                        {
+                            int j = 0;
+                            while (j < cardsPlayed)
+                            {
+                                if (topDeckCard <= 51 && playerArea.transform.childCount < 3)
+                                {
+                                    GameObject.Find(deck[topDeckCard]).transform.SetParent(playerArea.transform, true);
+                                    GameObject.Find(deck[topDeckCard]).GetComponent<UpdateCardSprite>().faceUp = true;
+                                    GameObject.Find(deck[topDeckCard]).GetComponent<DragDrop>().isDraggable = true;
+                                    topDeckCard++;
+                                    j++;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+                    else if (check == false)
+                    {
+                        lastPlayedCard = 'N';
+                        while (playedCards.Count != 0)
+                        {
+                            GameObject.Find(playedCards[0]).transform.SetParent(playerArea.transform, false);
+                            GameObject.Find(playedCards[0]).GetComponent<DragDrop>().isDraggable = true;
+                            playedCards.RemoveAt(0);
+                        }
+                        StartCoroutine(ComputerTurn());
+                    }
+                    else
+                    {
+                        lastPlayedCard = cardV;
+                        if (playerArea.transform.childCount == 0 && playerLastUpCards.Count == 0)
+                        {
+                            PlayerWins();
+                        }
+                        else if (playerArea.transform.childCount == 0 && playerFinalCards.Count == 0)
+                        {
+                            if (playerLastUpCards.Count != 0)
+                            {
+                                for (int i = 0; i < playerLastUpCards.Count; i++)
+                                {
+                                    GameObject.Find(playerLastUpCards[i]).transform.SetParent(canvas.transform, true);
+                                    GameObject.Find(playerLastUpCards[i]).GetComponent<DragDrop>().isDraggable = true;
+                                }
+                            }
+
+                            playerRound = 2;
+                            
+                        }
+                        else if (playerArea.transform.childCount == 0 && topDeckCard == 52)
+                        {
+                            while (playerFinalCards.Count != 0)
+                            {
+                                GameObject.Find(playerFinalCards[0]).transform.SetParent(playerArea.transform, true);
+                                GameObject.Find(playerFinalCards[0]).GetComponent<UpdateCardSprite>().faceUp = true;
+                                GameObject.Find(playerFinalCards[0]).GetComponent<DragDrop>().isDraggable = true;
+                                playerFinalCards.RemoveAt(0);
+                            }
+                            
+                        }
+                        else if (playerArea.transform.childCount < 3)
+                        {
+                            int j = 0;
+                            while (j < cardsPlayed)
+                            {
+                                if (topDeckCard <= 51 && playerArea.transform.childCount < 3)
+                                {
+                                    GameObject.Find(deck[topDeckCard]).transform.SetParent(playerArea.transform, true);
+                                    GameObject.Find(deck[topDeckCard]).GetComponent<UpdateCardSprite>().faceUp = true;
+                                    GameObject.Find(deck[topDeckCard]).GetComponent<DragDrop>().isDraggable = true;
+                                    topDeckCard++;
+                                    j++;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            
+                        }
+
+                        if (!(playerArea.transform.childCount == 0 && playerLastUpCards.Count == 0))
+                        {
+                            StartCoroutine(ComputerTurn());
+                        }
+                    }
+                    
+                }
+                
+            }
+            else if (playerRound == 2)
+            {
+                if (playerDZ.transform.childCount == 0)
+                {
+                    lastPlayedCard = 'N';
+                    while (playedCards.Count != 0)
+                    {
+                        GameObject.Find(playedCards[0]).transform.SetParent(playerArea.transform, false);
+                        GameObject.Find(playedCards[0]).GetComponent<DragDrop>().isDraggable = true;
+                        playedCards.RemoveAt(0);
+                    }
+                    if (playerLastUpCards.Count != 0)
+                    {
+                        for (int i = 0; i < playerLastUpCards.Count; i++)
+                        {
+                            GameObject.Find(playerLastUpCards[i]).transform.SetParent(canvas.transform.parent, true);
+                            GameObject.Find(playerLastUpCards[i]).transform.position = new Vector3(760 + (200 * i), 380, 0);
+                            GameObject.Find(playerLastUpCards[i]).GetComponent<DragDrop>().isDraggable = false;
+                        }
+                    }
+                    playerRound = 1;
+                    StartCoroutine(ComputerTurn());
+                }
+                else
+                {
+                    char cardV = playerDZ.transform.GetChild(0).name[0];
+
+                    string tempName = playerDZ.transform.GetChild(0).name;
+                    GameObject.Find(tempName).transform.SetParent(canvas.transform, true);
+                    GameObject.Find(tempName).transform.position = new Vector3(420, 540, 0);
+                    GameObject.Find(tempName).GetComponent<UpdateCardSprite>().faceUp = true;
+                    GameObject.Find(tempName).GetComponent<DragDrop>().isDraggable = false;
+                    playedCards.Add(tempName);
+                    playerLastUpCards.Remove(tempName);
+
                     bool check = CheckCard(cardV);
                     if (check == false)
                     {
@@ -373,31 +557,52 @@ public class Local2PHandler : MonoBehaviour
                             GameObject.Find(playedCards[0]).GetComponent<DragDrop>().isDraggable = true;
                             playedCards.RemoveAt(0);
                         }
+                        if (playerLastUpCards.Count != 0)
+                        {
+                            
+                            for (int i = 0; i < playerLastUpCards.Count; i++)
+                            {
+
+                                GameObject.Find(playerLastUpCards[i]).transform.SetParent(canvas.transform.parent, true);
+                                GameObject.Find(playerLastUpCards[i]).transform.position = new Vector3(760 + (200 * i), 380, 0);
+                                GameObject.Find(playerLastUpCards[i]).GetComponent<DragDrop>().isDraggable = false;
+                            }
+                        }
+                        
+                        playerRound = 1;
+                        StartCoroutine(ComputerTurn());
                     }
                     else
                     {
-                        lastPlayedCard = cardV;
-                        if (playerArea.transform.childCount < 3)
+                        if (tempName[0] == 'T')
                         {
-                            for (int i = 0; i < cardsPlayed; i++)
+                            if (playerLastUpCards.Count == 0)
                             {
-
-                                GameObject.Find(deck[i + topDeckCard]).transform.SetParent(playerArea.transform, true);
-                                GameObject.Find(deck[i + topDeckCard]).GetComponent<UpdateCardSprite>().faceUp = true;
-                                GameObject.Find(deck[i + topDeckCard]).GetComponent<DragDrop>().isDraggable = true;
-
+                                PlayerWins();
                             }
-                            topDeckCard += cardsPlayed;
+                            StartCoroutine(WaitOneSec());
+                            while (playedCards.Count != 0)
+                            {
+                                string tempN = playedCards[0];
+                                Destroy(GameObject.Find(tempN));
+                                playedCards.RemoveAt(0);
+                            }
+                            lastPlayedCard = 'N';
+                        }
+                        else
+                        {
+                            lastPlayedCard = cardV;
+
+                            if (playerLastUpCards.Count == 0)
+                            {
+                                PlayerWins();
+                            }
+                            StartCoroutine(ComputerTurn());
                         }
                         
                     }
-
+                    
                 }
-                StartCoroutine(ComputerTurn());
-            }
-            else if (playerRound == 2)
-            {
-
             }
         }
         
@@ -405,12 +610,14 @@ public class Local2PHandler : MonoBehaviour
 
     public void FlipTopCard(int who)
     {
-        GameObject.Find(deck[topDeckCard]).transform.SetParent(canvas.transform, true);
-        GameObject.Find(deck[topDeckCard]).transform.position = new Vector3(1040, 540, 0);
-        GameObject.Find(deck[topDeckCard]).GetComponent<UpdateCardSprite>().faceUp = true;
-        playedCards.Add(deck[topDeckCard]);
+        int num = topDeckCard;
+        topDeckCard++;
+        GameObject.Find(deck[num]).transform.SetParent(canvas.transform, true);
+        GameObject.Find(deck[num]).transform.position = new Vector3(420, 540, 0);
+        GameObject.Find(deck[num]).GetComponent<UpdateCardSprite>().faceUp = true;
+        playedCards.Add(deck[num]);
 
-        bool check = CheckCardFlip(topDeckCard);
+        bool check = CheckCardFlip(num);
         if (check == false)
         {
             if (who == 1)
@@ -421,22 +628,52 @@ public class Local2PHandler : MonoBehaviour
                     GameObject.Find(playedCards[0]).GetComponent<DragDrop>().isDraggable = true;
                     playedCards.RemoveAt(0);
                 }
+                lastPlayedCard = 'N';
+                StartCoroutine(ComputerTurn()); 
             }
             else if (who == 2)
             {
                 while (playedCards.Count != 0)
                 {
                     GameObject.Find(playedCards[0]).transform.SetParent(computerArea.transform, false);
+                    GameObject.Find(playedCards[0]).GetComponent<DragDrop>().isDraggable = false;
+                    GameObject.Find(playedCards[0]).GetComponent<UpdateCardSprite>().faceUp = false;
                     playedCards.RemoveAt(0);
                 }
+                lastPlayedCard = 'N';
             }
-            lastPlayedCard = 'N';
+            
         }
         else
         {
-            lastPlayedCard = deck[topDeckCard][0];
+            if (deck[num][0] != 'T')
+            {
+                lastPlayedCard = deck[num][0];
+                if (who == 1)
+                {
+                    StartCoroutine(ComputerTurn());
+                }
+                
+                
+            }
+            else
+            {
+                StartCoroutine(WaitOneSec());
+                while (playedCards.Count != 0)
+                {
+                    string tempN = playedCards[0];
+                    Destroy(GameObject.Find(tempN));
+                    playedCards.RemoveAt(0);
+                }
+                lastPlayedCard = 'N';
+                if (who == 2)
+                {
+                    StartCoroutine(ComputerTurn());
+                }
+            }
+
         }
-        topDeckCard++;
+        
     }
 
     public bool CheckCard(char cardValue)
@@ -530,7 +767,7 @@ public class Local2PHandler : MonoBehaviour
                     {
                         checkGood = false;
                     }
-                    break;
+                    break; 
                 case 'K':
                     if (cardValue == '2' || cardValue == '5' || cardValue == 'T' || cardValue == 'K' || cardValue == 'A')
                     {
@@ -687,10 +924,17 @@ public class Local2PHandler : MonoBehaviour
             FindBestLastCards();
             computerRound++;
             GameObject.Find(deck[topDeckCard]).transform.SetParent(canvas.transform, true);
-            GameObject.Find(deck[topDeckCard]).transform.position = new Vector3(1040, 540, 0);
+            GameObject.Find(deck[topDeckCard]).transform.position = new Vector3(420, 540, 0);
             GameObject.Find(deck[topDeckCard]).GetComponent<UpdateCardSprite>().faceUp = true;
             lastPlayedCard = deck[topDeckCard][0];
             playedCards.Add(deck[topDeckCard]);
+            if (lastPlayedCard == 'T')
+            {
+                StartCoroutine(WaitOneSec());
+                Destroy(GameObject.Find(deck[topDeckCard]));
+                playedCards.RemoveAt(0);
+                lastPlayedCard = 'N';
+            }
             topDeckCard++;
         }
         else if (computerRound == 1)
@@ -699,10 +943,155 @@ public class Local2PHandler : MonoBehaviour
             if (pos == true)
             {
                 string bestCard = BestComputerCard();
+                GameObject.Find(bestCard).transform.SetParent(canvas.transform, true);
+                GameObject.Find(bestCard).transform.position = new Vector3(420, 540, 0);
+                GameObject.Find(bestCard).GetComponent<UpdateCardSprite>().faceUp = true;
+                lastPlayedCard = bestCard[0];
+                playedCards.Add(bestCard);
+                if (bestCard[0] == 'T')
+                {
+                    StartCoroutine(WaitOneSec());
+                    while (playedCards.Count != 0)
+                    {
+                        string tempN = playedCards[0];
+                        Destroy(GameObject.Find(tempN));
+                        playedCards.RemoveAt(0);
+                    }
+                    lastPlayedCard = 'N';
+                    if (computerArea.transform.childCount == 0 && computerLastUpCards.Count == 0)
+                    {
+                        ComputerWins();
+                    }
+                    else if (computerArea.transform.childCount == 0 && computerFinalCards.Count == 0)
+                    {
+                        playerRound = 2;
+                        StartCoroutine(ComputerTurn());
+                    }
+                    else if (computerArea.transform.childCount == 0 && topDeckCard == 52)
+                    {
+                        while (computerFinalCards.Count != 0)
+                        {
+                            GameObject.Find(computerFinalCards[0]).transform.SetParent(computerArea.transform, true);
+                            GameObject.Find(computerFinalCards[0]).GetComponent<UpdateCardSprite>().faceUp = false;
+                            GameObject.Find(computerFinalCards[0]).GetComponent<DragDrop>().isDraggable = false;
+                            computerFinalCards.RemoveAt(0);
+                        }
+                        StartCoroutine(ComputerTurn());
+                    }
+                    else if (computerArea.transform.childCount < 3)
+                    {
+                        if (topDeckCard <= 51)
+                        {
+                            GameObject.Find(deck[topDeckCard]).transform.SetParent(computerArea.transform, true);
+                            topDeckCard++;
+                        }
+                        StartCoroutine(ComputerTurn());
+                    }
+                }
+                else
+                {
+                    if (computerArea.transform.childCount == 0 && computerLastUpCards.Count == 0)
+                    {
+                        ComputerWins();
+                    }
+                    else if (computerArea.transform.childCount == 0 && computerFinalCards.Count == 0)
+                    {
+                        playerRound = 2;
+                    }
+                    else if (computerArea.transform.childCount == 0 && topDeckCard == 52)
+                    {
+                        while (computerFinalCards.Count != 0)
+                        {
+                            GameObject.Find(computerFinalCards[0]).transform.SetParent(computerArea.transform, true);
+                            GameObject.Find(computerFinalCards[0]).GetComponent<UpdateCardSprite>().faceUp = false;
+                            GameObject.Find(computerFinalCards[0]).GetComponent<DragDrop>().isDraggable = false;
+                            computerFinalCards.RemoveAt(0);
+                        }
+                    }
+                    else if (computerArea.transform.childCount < 3)
+                    {
+                        if (topDeckCard <= 51)
+                        {
+                            GameObject.Find(deck[topDeckCard]).transform.SetParent(computerArea.transform, true);
+                            topDeckCard++;
+                        }
+                    }
+                }
+                
+                
             }
             else if (pos == false)
             {
-                FlipTopCard(2);
+                if (topDeckCard <= 51)
+                {
+                    FlipTopCard(2);
+                }
+                else
+                {
+                    lastPlayedCard = 'N';
+                    while (playedCards.Count != 0)
+                    {
+                        GameObject.Find(playedCards[0]).transform.SetParent(computerArea.transform, false);
+                        GameObject.Find(playedCards[0]).GetComponent<DragDrop>().isDraggable = false;
+                        GameObject.Find(playedCards[0]).GetComponent<UpdateCardSprite>().faceUp = false;
+                        playedCards.RemoveAt(0);
+                    }
+                }
+            }
+        }
+        else if (computerRound == 2)
+        {
+            Random rand = new System.Random();
+            int num = rand.Next(computerLastUpCards.Count - 1);
+            string cardN = computerLastUpCards[num];
+            computerLastUpCards.RemoveAt(num);
+            GameObject.Find(cardN).transform.SetParent(canvas.transform, true);
+            GameObject.Find(cardN).transform.position = new Vector3(420, 540, 0);
+            GameObject.Find(cardN).GetComponent<UpdateCardSprite>().faceUp = true;
+            playedCards.Add(cardN);
+
+            bool check = CheckCard(cardN[0]);
+            if (check == false)
+            {
+                lastPlayedCard = 'N';
+                while (playedCards.Count != 0)
+                {
+                    GameObject.Find(playedCards[0]).transform.SetParent(computerArea.transform, false);
+                    GameObject.Find(playedCards[0]).GetComponent<DragDrop>().isDraggable = false;
+                    GameObject.Find(playedCards[0]).GetComponent<UpdateCardSprite>().faceUp = false;
+                    playedCards.RemoveAt(0);
+                }
+
+                computerRound = 1;
+            }
+            else
+            {
+                if (cardN[0] == 'T')
+                {
+                    StartCoroutine(WaitOneSec());
+                    while (playedCards.Count != 0)
+                    {
+                        string tempN = playedCards[0];
+                        Destroy(GameObject.Find(tempN));
+                        playedCards.RemoveAt(0);
+                    }
+                    lastPlayedCard = 'N';
+                    if (computerLastUpCards.Count != 0)
+                    {
+                        StartCoroutine(ComputerTurn());
+                    }
+                }
+                else
+                {
+                    lastPlayedCard = cardN[0];
+                }
+                
+
+                if (computerLastUpCards.Count == 0)
+                {
+                    ComputerWins();
+                }
+
             }
         }
         playerTurn = true;
@@ -716,8 +1105,97 @@ public class Local2PHandler : MonoBehaviour
     public string BestComputerCard()
     {
         string bestCard = "";
+        List<string> playable = new List<string>();
 
+        for (int i = 0; i < computerArea.transform.childCount; i++)
+        {
+            char cardV = computerArea.transform.GetChild(i).name[0];
+            switch (lastPlayedCard)
+            {
+                case '4':
+                    if (cardV == '2' || cardV == '4' || cardV == '5' || cardV == '6' || cardV == '7' || cardV == '8' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    break;
+                case '6':
+                    if (cardV == '2' || cardV == '5' || cardV == '6' || cardV == '7' || cardV == '8' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    break;
+                case '7':
+                    if (cardV == '2' || cardV == '5' || cardV == '7' || cardV == '8' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    break;
+                case '8':
+                    if (cardV == '2' || cardV == '5' || cardV == '8' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    break;
+                case '9':
+                    if (cardV == '2' || cardV == '5' || cardV == '9' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    
+                    break;
+                case 'J':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == 'J' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    
+                    break;
+                case 'Q':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == 'Q' || cardV == 'K' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    
+                    break;
+                case 'K':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == 'K' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    
+                    break;
+                case 'A':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == 'A')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    
+                    break;
+                case '5':
+                    if (cardV == '2' || cardV == '5' || cardV == 'T' || cardV == '4' || cardV == '3')
+                    {
+                        playable.Add(computerArea.transform.GetChild(i).name);
+                    }
+                    
+                    break;
+                default:
+                    playable.Add(computerArea.transform.GetChild(i).name);
+                    break;
+            }
 
+            
+        }
+
+        if (playable.Count == 1)
+        {
+            bestCard = playable[0];
+        }
+        else
+        {
+            Random rand = new System.Random();
+            int num = rand.Next(playable.Count - 1);
+            bestCard = playable[num];
+        }
 
         return bestCard;
     }
@@ -884,12 +1362,37 @@ public class Local2PHandler : MonoBehaviour
         for (int j = 0; j < 3; j++)
         {
             GameObject.Find(bestCards[j]).transform.SetParent(canvas.transform, false);
-            GameObject.Find(bestCards[j]).transform.position = new Vector3(1110 - xOffset, 750, 30);
+            GameObject.Find(bestCards[j]).transform.position = new Vector3(1160 - xOffset, 700, 30);
             GameObject.Find(bestCards[j]).GetComponent<UpdateCardSprite>().faceUp = true;
             computerFinalCards.Add(bestCards[j]);
-            xOffset = xOffset + 150;
+            xOffset = xOffset + 200;
         }
         
 
+    }
+
+    void PlayerWins()
+    {
+        Debug.Log("Player Won");
+    }
+
+    void ComputerWins()
+    {
+        Debug.Log("Computer Won");
+    }
+
+    IEnumerator WaitOneSec()
+    {
+        playerTurn = false;
+        for (int i = 0; i < playerDZ.transform.childCount; i++)
+        {
+            playerDZ.transform.GetChild(i).GetComponent<DragDrop>().isDraggable = false;
+        }
+        yield return new WaitForSeconds(0.5f);
+        playerTurn = true;
+        for (int i = 0; i < playerDZ.transform.childCount; i++)
+        {
+            playerDZ.transform.GetChild(i).GetComponent<DragDrop>().isDraggable = true;
+        }
     }
 }

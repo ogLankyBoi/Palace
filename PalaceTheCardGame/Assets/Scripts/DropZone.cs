@@ -22,11 +22,11 @@ public class DropZone : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (round == 0 && gameObject.transform.childCount < 3)
+        if (round == 0 && gameObject.transform.childCount < 3 && eventData.pointerDrag.GetComponent<DragDrop>().isDraggable == true)
         {
             eventData.pointerDrag.transform.SetParent(gameObject.transform, false);
         }
-        else if (round == 1 && gameObject.transform.childCount < 4)
+        else if (round == 1 && gameObject.transform.childCount < 4 && eventData.pointerDrag.GetComponent<DragDrop>().isDraggable == true)
         {
             if (gameObject.transform.childCount == 0)
             {
@@ -37,7 +37,7 @@ public class DropZone : MonoBehaviour, IDropHandler
                 eventData.pointerDrag.transform.SetParent(gameObject.transform, false);
             }
         }
-        else if (round == 2 && gameObject.transform.childCount < 1)
+        else if (round == 2 && gameObject.transform.childCount < 1 && eventData.pointerDrag.GetComponent<DragDrop>().isDraggable == true)
         {
             eventData.pointerDrag.transform.SetParent(gameObject.transform, false);
         }

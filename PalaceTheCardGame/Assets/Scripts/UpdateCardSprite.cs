@@ -8,6 +8,8 @@ public class UpdateCardSprite : MonoBehaviour
     public Sprite cardFace;
     public Sprite cardBack;
 
+    private bool dragging;
+    private SpriteRenderer sprite;
     private Image spriteRenderer;
     private Local2PHandler local2PHandler;
     public bool faceUp = false;
@@ -27,13 +29,14 @@ public class UpdateCardSprite : MonoBehaviour
             }
             i++;
         }
-
+        
         spriteRenderer = this.GetComponent<Image>();
+        sprite = this.GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //dragging = this.GetComponent<DragDrop>().isDragging;
         if (faceUp == false)
         {
             spriteRenderer.sprite = cardBack;
@@ -42,5 +45,13 @@ public class UpdateCardSprite : MonoBehaviour
         {
             spriteRenderer.sprite = cardFace;
         }
+        /*if (this.transform.parent.name == "PlayerArea" || this.transform.parent.name == "ComputerArea" || this.transform.parent.name == "PDZ" || dragging == true)
+        {
+            sprite.sprite = null;
+        }
+        else
+        {
+            sprite.sprite = cardBack;
+        }*/
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class DragDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public bool isDraggable;
-    private bool isDragging;
+    public bool isDragging;
 
     public GameObject canvas;
     public GameObject playerArea;
@@ -54,35 +54,5 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         }
         
     }
-    /*void Update()
-    {
-        if (isDragging && isDraggable)
-        {
-            Vector3 mousePos;
-            mousePos = Input.mousePosition;
-            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-
-            this.gameObject.transform.localPosition = new Vector3(mousePos.x - startPosX, mousePos.y - startPosY, this.gameObject.transform.localPosition.z);
-        }
-    }
-
-    private void OnMouseDown()
-    {
-        if (Input.GetMouseButtonDown(0) && isDraggable)
-        {
-            Vector3 mousePos;
-            mousePos = Input.mousePosition;
-            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-
-            startPosX = mousePos.x - this.transform.localPosition.x;
-            startPosY = mousePos.y - this.transform.localPosition.y;
-
-            isDragging = true;
-        }
-    }
-
-    private void OnMouseUp()
-    {
-        isDragging = false;
-    }*/
+    
 }

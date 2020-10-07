@@ -6,6 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 566f7bdc4f02fd946ab286c5e9ff6860
+  - enabled: 1
+    path: Assets/Scenes/HowToPlay.unity
+    guid: 5e88deaf27301b54db3b727d659c20cc
+  - enabled: 1
+    path: Assets/Scenes/LocalPlayMenu.unity
+    guid: 7d745873113472c439c0ff7a94712be2
+  - enabled: 1
     path: Assets/Scenes/Local2P.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Local3P.unity
+    guid: 5aa7ea3614811c44a8fbe958e7606ff3
+  - enabled: 1
+    path: Assets/Scenes/Local4P.unity
+    guid: bc0eed7a22665f9439368e5e33c7b1ca
+  - enabled: 1
+    path: Assets/Scenes/OnlinePlayMenu.unity
+    guid: 667b25b442424944dae231d56b7d8569
   m_configObjects: {}
